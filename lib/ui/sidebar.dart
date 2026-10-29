@@ -303,7 +303,11 @@ class _SidebarPane extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: windowControls.height > 0 ? windowControls.height + 4.0 : _verticalInset),
+          SizedBox(
+            height: windowControls.height > 0
+                ? windowControls.height + 4.0
+                : _verticalInset,
+          ),
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: _SidebarButton(
@@ -406,9 +410,7 @@ class _SidebarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: sideInset,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: sideInset),
       child: Semantics(
         container: true,
         button: true,
@@ -428,7 +430,10 @@ class _SidebarButton extends StatelessWidget {
                 message: tooltip,
                 excludeFromSemantics: !tooltipIsLabel,
                 child: IconTheme.merge(
-                  data: IconThemeData(size: _iconSize, color: selected == true ? colors.indicator : colors.icon),
+                  data: IconThemeData(
+                    size: _iconSize,
+                    color: selected == true ? colors.indicator : colors.icon,
+                  ),
                   child: SizedBox(height: height, child: child),
                 ),
               ),

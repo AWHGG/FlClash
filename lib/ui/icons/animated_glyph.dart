@@ -8,7 +8,12 @@ const _fillDuration = Duration(milliseconds: 350);
 const _popScale = 0.1;
 
 class AnimatedGlyph extends StatefulWidget {
-  const AnimatedGlyph({super.key, required this.glyph, required this.filled, this.color});
+  const AnimatedGlyph({
+    super.key,
+    required this.glyph,
+    required this.filled,
+    this.color,
+  });
 
   final Glyph glyph;
   final bool filled;
@@ -69,7 +74,11 @@ class _AnimatedGlyphState extends State<AnimatedGlyph>
             : 0.0;
         return Transform.scale(
           scale: 1 + pop,
-          child: GlyphIcon(widget.glyph, fill: _fill.value, color: widget.color),
+          child: GlyphIcon(
+            widget.glyph,
+            fill: _fill.value,
+            color: widget.color,
+          ),
         );
       },
     );

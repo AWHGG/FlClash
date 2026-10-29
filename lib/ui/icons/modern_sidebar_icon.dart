@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:fl_clash/enum/enum.dart';
 import 'package:flutter/material.dart';
 
@@ -167,16 +168,15 @@ class _ThemedIconPainter extends CustomPainter {
 
     // Equator line
     final linePaint = Paint()
-      ..color = selected ? color.withValues(alpha: 0.85) : color.withValues(alpha: 0.6)
+      ..color = selected
+          ? color.withValues(alpha: 0.85)
+          : color.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
     canvas.drawLine(const Offset(3.8, 12), const Offset(20.2, 12), linePaint);
 
     // Meridian ellipse
-    canvas.drawOval(
-      const Rect.fromLTWH(7.8, 3.5, 8.4, 17.0),
-      linePaint,
-    );
+    canvas.drawOval(const Rect.fromLTWH(7.8, 3.5, 8.4, 17.0), linePaint);
 
     // Center connection node
     final centerPaint = Paint()
@@ -225,7 +225,11 @@ class _ThemedIconPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(const Offset(9.0, 13.0), const Offset(15.5, 13.0), linePaint);
+    canvas.drawLine(
+      const Offset(9.0, 13.0),
+      const Offset(15.5, 13.0),
+      linePaint,
+    );
     canvas.drawLine(
       const Offset(9.0, 16.5),
       const Offset(13.5, 16.5),
@@ -240,7 +244,9 @@ class _ThemedIconPainter extends CustomPainter {
   void _drawConnections(Canvas canvas) {
     // 3 network nodes
     final linePaint = Paint()
-      ..color = selected ? color.withValues(alpha: 0.75) : color.withValues(alpha: 0.5)
+      ..color = selected
+          ? color.withValues(alpha: 0.75)
+          : color.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round;
@@ -257,7 +263,11 @@ class _ThemedIconPainter extends CustomPainter {
     // Left node
     canvas.drawCircle(const Offset(6.5, 17.5), selected ? 2.8 : 2.3, nodePaint);
     // Right node
-    canvas.drawCircle(const Offset(17.5, 17.5), selected ? 2.8 : 2.3, nodePaint);
+    canvas.drawCircle(
+      const Offset(17.5, 17.5),
+      selected ? 2.8 : 2.3,
+      nodePaint,
+    );
   }
 
   void _drawTools(Canvas canvas) {
@@ -312,7 +322,11 @@ class _ThemedIconPainter extends CustomPainter {
       ..strokeWidth = 1.8;
     canvas.drawCircle(const Offset(12, 12), 8.5, strokePaint);
     canvas.drawLine(const Offset(12, 12), const Offset(12, 7.5), strokePaint);
-    canvas.drawLine(const Offset(12, 12), const Offset(15.5, 14.0), strokePaint);
+    canvas.drawLine(
+      const Offset(12, 12),
+      const Offset(15.5, 14.0),
+      strokePaint,
+    );
   }
 
   void _drawDns(Canvas canvas) {

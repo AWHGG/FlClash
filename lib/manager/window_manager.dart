@@ -461,9 +461,7 @@ class WindowHeaderBar extends StatelessWidget {
                   onDragStart();
                 },
                 onDoubleTap: onDoubleTap,
-                child: ColoredBox(
-                  color: pageColor,
-                ),
+                child: ColoredBox(color: pageColor),
               ),
             ),
             if (title != null)
