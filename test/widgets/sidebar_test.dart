@@ -107,8 +107,8 @@ void main() {
     await tester.pumpWidget(_sidebar(selectedIndex: 1));
 
     final indicator = tester.getRect(_indicator(tester));
-    expect(indicator.width, 3);
-    expect(indicator.height, 16);
+    expect(indicator.width, 3.5);
+    expect(indicator.height, 20);
     expect(
       indicator.center.dy,
       moreOrLessEquals(tester.getCenter(_glyph(AppGlyphs.proxies)).dy),
@@ -131,11 +131,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 160));
     final middle = tester.getRect(_indicator(tester));
     expect(middle.top, greaterThanOrEqualTo(start.top));
-    expect(middle.height, greaterThan(16));
+    expect(middle.height, greaterThan(20));
 
     await tester.pumpAndSettle();
     final end = tester.getRect(_indicator(tester));
-    expect(end.height, 16);
+    expect(end.height, 20);
     expect(
       end.center.dy,
       moreOrLessEquals(tester.getCenter(_glyph(AppGlyphs.profiles)).dy),
@@ -166,7 +166,7 @@ void main() {
       ),
     );
 
-    expect(tester.getSize(_sidebarFinder).width, 48);
+    expect(tester.getSize(_sidebarFinder).width, 68);
     expect(_labelOpacities(tester, 'Proxies'), [0]);
     expect(_rowTooltip('Proxies'), findsOneWidget);
     await tester.tap(_glyph(AppGlyphs.profiles));
@@ -180,7 +180,7 @@ void main() {
     await tester.pumpWidget(_sidebar(onToggle: () {}));
     await tester.pump(const Duration(milliseconds: 120));
     final width = tester.getSize(_sidebarFinder).width;
-    expect(width, allOf(greaterThan(48), lessThan(220)));
+    expect(width, allOf(greaterThan(68), lessThan(220)));
     expect(tester.takeException(), isNull);
 
     await tester.pumpAndSettle();
@@ -260,7 +260,7 @@ void main() {
           )
           .first,
     );
-    expect(selectedItem.size, const Size(54, 40));
+    expect(selectedItem.size, const Size(54, 44));
     expect(selectedItem.center.dx, sidebar.center.dx);
 
     final folder = tester.getCenter(_glyph(AppGlyphs.profiles));
@@ -287,7 +287,7 @@ void main() {
 
       await openOverlay(tester);
 
-      expect(tester.getSize(_sidebarFinder).width, 48);
+      expect(tester.getSize(_sidebarFinder).width, 68);
       expect(
         tester.getSize(find.byKey(const ValueKey('content'))).width,
         contentWidth,
@@ -299,11 +299,8 @@ void main() {
       );
       final colorScheme = Theme.of(tester.element(_sidebarFinder)).colorScheme;
       final pane = tester.widget<Material>(_paneFinder);
-      expect(pane.color, colorScheme.chromeSurface);
-      expect(
-        (pane.shape! as BorderDirectional).end,
-        Divider.createBorderSide(tester.element(_sidebarFinder)),
-      );
+      expect(pane.color, SurfaceLevel.page.colorOf(colorScheme));
+      expect(pane.shape, isNull);
 
       await tester.tap(find.byTooltip('Collapse'));
       await tester.pumpAndSettle();
@@ -318,7 +315,7 @@ void main() {
         _sidebar(expanded: false, safePadding: safePadding),
       );
       final sidebar = tester.getRect(_sidebarFinder);
-      expect(sidebar.width, 48 + safePadding.left);
+      expect(sidebar.width, 68 + safePadding.left);
       final toggle = tester.getTopLeft(find.byTooltip('Expand'));
       expect(toggle.dx, greaterThanOrEqualTo(sidebar.left + safePadding.left));
       expect(toggle.dy, greaterThanOrEqualTo(sidebar.top + safePadding.top));
