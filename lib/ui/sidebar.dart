@@ -14,18 +14,18 @@ import 'package:material_ui/material_ui.dart';
 
 const _compactWidth = 68.0;
 const _expandedWidth = 220.0;
-const _itemSize = 48.0;
-const _itemGap = 10.0;
-const _toggleGap = 20.0;
-const _verticalInset = 19.0;
+const _itemSize = 44.0;
+const _itemGap = 8.0;
+const _toggleGap = 10.0;
+const _verticalInset = 22.0;
 const _maxSideInset = 12.0;
-const _iconSize = 28.0;
+const _iconSize = 26.0;
 const _labelGap = 12.0;
 const _indicatorWidth = 3.5;
-const _indicatorHeight = 22.0;
+const _indicatorHeight = 20.0;
 const _expandDuration = Duration(milliseconds: 250);
 const _indicatorDuration = Duration(milliseconds: 320);
-final _itemShape = AppShape.all(12);
+final _itemShape = AppShape.all(11);
 
 class SidebarDestination {
   const SidebarDestination({
