@@ -15,9 +15,9 @@ import 'package:material_ui/material_ui.dart';
 const _compactWidth = 68.0;
 const _expandedWidth = 220.0;
 const _itemSize = 48.0;
-const _itemGap = 8.0;
-const _toggleGap = 12.0;
-const _verticalInset = 4.0;
+const _itemGap = 12.0;
+const _toggleGap = 36.0;
+const _verticalInset = 26.0;
 const _maxSideInset = 12.0;
 const _iconSize = 28.0;
 const _labelGap = 12.0;
@@ -299,7 +299,7 @@ class _SidebarPane extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: windowControls.height + _verticalInset),
+          SizedBox(height: windowControls.height > 0 ? windowControls.height + 4.0 : _verticalInset),
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: _SidebarButton(
