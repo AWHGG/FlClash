@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:fl_clash/enum/enum.dart';
 import 'package:flutter/material.dart';
 
