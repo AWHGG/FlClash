@@ -460,10 +460,10 @@ class WindowHeaderBar extends StatelessWidget {
                 onDoubleTap: onDoubleTap,
                 child: ColoredBox(
                   color: backdropOpacity != null
-                      ? colorScheme.chromeSurface.withValues(
+                      ? SurfaceLevel.page.colorOf(colorScheme).withValues(
                           alpha: backdropOpacity,
                         )
-                      : colorScheme.chromeSurface,
+                      : SurfaceLevel.page.colorOf(colorScheme),
                 ),
               ),
             ),

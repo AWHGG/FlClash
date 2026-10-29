@@ -19,7 +19,7 @@ const _itemGap = 8.0;
 const _toggleGap = 12.0;
 const _verticalInset = 4.0;
 const _maxSideInset = 12.0;
-const _iconSize = 26.0;
+const _iconSize = 24.0;
 const _labelGap = 12.0;
 const _indicatorWidth = 3.5;
 const _indicatorHeight = 18.0;
@@ -215,7 +215,7 @@ class _SidebarOverlay extends StatelessWidget {
               child: FocusScope(
                 autofocus: true,
                 child: Material(
-                  color: colorScheme.chromeSurface,
+                  color: SurfaceLevel.page.colorOf(colorScheme),
                   // shape: BorderDirectional(end: Divider.createBorderSide(context)),
                   elevation: 8,
                   shadowColor: colorScheme.shadow,
@@ -235,9 +235,9 @@ class _SidebarOverlay extends StatelessWidget {
 
 class _SidebarColors {
   _SidebarColors(ColorScheme scheme)
-    : selectedFill = scheme.onSurface.withValues(alpha: 0.08),
+    : selectedFill = scheme.primary.withValues(alpha: 0.12),
       label = scheme.onSurface,
-      icon = scheme.onSurfaceVariant,
+      icon = scheme.onSurfaceVariant.withValues(alpha: 0.72),
       indicator = scheme.primary,
       overlay = WidgetStateProperty.fromMap({
         WidgetState.pressed: scheme.onSurface.withValues(alpha: 0.06),
@@ -347,6 +347,9 @@ class _SidebarPane extends StatelessWidget {
                                 iconInset: iconInset,
                                 style: labelStyle,
                                 labelOpacity: labelOpacity,
+                                iconColor: index == selectedIndex
+                                    ? colors.indicator
+                                    : colors.icon,
                               ),
                             ),
                           ],
@@ -421,7 +424,7 @@ class _SidebarButton extends StatelessWidget {
                 message: tooltip,
                 excludeFromSemantics: !tooltipIsLabel,
                 child: IconTheme.merge(
-                  data: IconThemeData(size: _iconSize, color: colors.icon),
+                  data: IconThemeData(size: _iconSize, color: selected == true ? colors.indicator : colors.icon),
                   child: SizedBox(height: height, child: child),
                 ),
               ),
@@ -461,6 +464,7 @@ class _DestinationRow extends StatelessWidget {
     required this.iconInset,
     required this.style,
     required this.labelOpacity,
+    required this.iconColor,
   });
 
   final SidebarDestination destination;
@@ -469,6 +473,7 @@ class _DestinationRow extends StatelessWidget {
   final double iconInset;
   final TextStyle? style;
   final double labelOpacity;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -480,14 +485,11 @@ class _DestinationRow extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(width: iconInset),
-            if (destination.pageLabel != null)
-              ModernSidebarIcon(
-                pageLabel: destination.pageLabel!,
-                selected: selected,
-                size: _iconSize,
-              )
-            else
-              AnimatedGlyph(glyph: destination.glyph, filled: selected),
+            AnimatedGlyph(
+              glyph: destination.glyph,
+              filled: selected,
+              color: iconColor,
+            ),
             const SizedBox(width: _labelGap),
             Expanded(
               child: Opacity(
@@ -498,7 +500,10 @@ class _DestinationRow extends StatelessWidget {
                   maxLines: 1,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
-                  style: style,
+                  style: style?.copyWith(
+                    color: selected ? iconColor : style?.color,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
