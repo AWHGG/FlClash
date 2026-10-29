@@ -12,20 +12,20 @@ import 'package:fl_clash/ui/typography.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
-const _compactWidth = 48.0;
+const _compactWidth = 58.0;
 const _expandedWidth = 220.0;
-const _itemSize = 40.0;
-const _itemGap = 4.0;
-const _toggleGap = 8.0;
+const _itemSize = 44.0;
+const _itemGap = 8.0;
+const _toggleGap = 12.0;
 const _verticalInset = 4.0;
 const _maxSideInset = 12.0;
-const _iconSize = 24.0;
+const _iconSize = 26.0;
 const _labelGap = 12.0;
-const _indicatorWidth = 3.0;
-const _indicatorHeight = 16.0;
+const _indicatorWidth = 3.5;
+const _indicatorHeight = 18.0;
 const _expandDuration = Duration(milliseconds: 250);
 const _indicatorDuration = Duration(milliseconds: 320);
-final _itemShape = AppShape.all(10);
+final _itemShape = AppShape.all(12);
 
 class SidebarDestination {
   const SidebarDestination({
@@ -319,75 +319,52 @@ class _SidebarPane extends StatelessWidget {
           ),
           const SizedBox(height: _toggleGap),
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final availableHeight = constraints.maxHeight;
-                final n = destinations.length;
-                final calculatedGap = n > 1
-                    ? (availableHeight - n * itemHeight) / (n + 1)
-                    : 4.0;
-                final dynamicGap = calculatedGap.clamp(6.0, 28.0);
-                final totalItemsHeight = n * itemHeight + (n - 1) * dynamicGap;
-                final topPadding = math.max(
-                  0.0,
-                  (availableHeight - totalItemsHeight) / 2,
-                );
-                final stride = itemHeight + dynamicGap;
-
-                return ScrollConfiguration(
-                  behavior: const HiddenBarScrollBehavior(),
-                  child: SingleChildScrollView(
-                    child: SizedBox(
-                      height: math.max(
-                        availableHeight,
-                        totalItemsHeight + topPadding * 2,
-                      ),
-                      child: Stack(
+            child: ScrollConfiguration(
+              behavior: const HiddenBarScrollBehavior(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: topPadding),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                for (final (index, destination)
-                                    in destinations.indexed) ...[
-                                  if (index > 0) SizedBox(height: dynamicGap),
-                                  _SidebarButton(
-                                    key: ValueKey(destination.label),
-                                    colors: colors,
-                                    height: itemHeight,
-                                    sideInset: sideInset,
-                                    selected: index == selectedIndex,
-                                    tooltip: rowTooltip(destination.label),
-                                    onTap: () => onSelected(index),
-                                    child: _DestinationRow(
-                                      destination: destination,
-                                      selected: index == selectedIndex,
-                                      width: rowWidth,
-                                      iconInset: iconInset,
-                                      style: labelStyle,
-                                      labelOpacity: labelOpacity,
-                                    ),
-                                  ),
-                                ],
-                              ],
+                          for (final (index, destination)
+                              in destinations.indexed) ...[
+                            if (index > 0) const SizedBox(height: _itemGap),
+                            _SidebarButton(
+                              key: ValueKey(destination.label),
+                              colors: colors,
+                              height: itemHeight,
+                              sideInset: sideInset,
+                              selected: index == selectedIndex,
+                              tooltip: rowTooltip(destination.label),
+                              onTap: () => onSelected(index),
+                              child: _DestinationRow(
+                                destination: destination,
+                                selected: index == selectedIndex,
+                                width: rowWidth,
+                                iconInset: iconInset,
+                                style: labelStyle,
+                                labelOpacity: labelOpacity,
+                              ),
                             ),
-                          ),
-                          if (selectedIndex < destinations.length)
-                            _SelectionIndicator(
-                              color: colors.indicator,
-                              index: selectedIndex,
-                              start: sideInset,
-                              topOffset: topPadding,
-                              stride: stride,
-                              itemHeight: itemHeight,
-                            ),
+                          ],
                         ],
                       ),
-                    ),
+                      if (selectedIndex < destinations.length)
+                        _SelectionIndicator(
+                          color: colors.indicator,
+                          index: selectedIndex,
+                          start: sideInset,
+                          topOffset: 0.0,
+                          stride: itemHeight + _itemGap,
+                          itemHeight: itemHeight,
+                        ),
+                    ],
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
           const SizedBox(height: _verticalInset),

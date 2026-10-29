@@ -44,7 +44,7 @@ jobs:
           echo "$CA_BUNDLE_SHA256  $bundle" | sha256sum -c -
 
       - name: Build Windows App
-        run: dart setup.dart windows -v
+        run: dart setup.dart windows --env stable -v
 
       - name: Upload Windows App Artifact
         uses: actions/upload-artifact@v4
