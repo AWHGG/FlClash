@@ -248,17 +248,20 @@ class WindowHeaderLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Overlay.wrap(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: height),
-              Expanded(flex: 1, child: child),
-            ],
-          ),
-          Positioned(top: 0, left: 0, right: 0, child: header),
-        ],
+    return ColoredBox(
+      color: SurfaceLevel.page.colorOf(context.colorScheme),
+      child: Overlay.wrap(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: height),
+                Expanded(flex: 1, child: child),
+              ],
+            ),
+            Positioned(top: 0, left: 0, right: 0, child: header),
+          ],
+        ),
       ),
     );
   }
@@ -443,9 +446,9 @@ class WindowHeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
-    final backdropOpacity = this.backdropOpacity;
+    final pageColor = SurfaceLevel.page.colorOf(colorScheme);
     return Material(
-      color: backdropOpacity != null ? Colors.transparent : null,
+      color: pageColor,
       // shape: Border(bottom: Divider.createBorderSide(context)),
       child: SizedBox(
         height: height,
@@ -459,11 +462,7 @@ class WindowHeaderBar extends StatelessWidget {
                 },
                 onDoubleTap: onDoubleTap,
                 child: ColoredBox(
-                  color: backdropOpacity != null
-                      ? SurfaceLevel.page.colorOf(colorScheme).withValues(
-                          alpha: backdropOpacity,
-                        )
-                      : SurfaceLevel.page.colorOf(colorScheme),
+                  color: pageColor,
                 ),
               ),
             ),
