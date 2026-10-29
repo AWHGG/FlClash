@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/ui/context.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
 import 'package:fl_clash/ui/l10n.dart';
@@ -27,10 +28,15 @@ const _indicatorDuration = Duration(milliseconds: 320);
 final _itemShape = AppShape.all(10);
 
 class SidebarDestination {
-  const SidebarDestination({required this.glyph, required this.label});
+  const SidebarDestination({
+    required this.glyph,
+    required this.label,
+    this.pageLabel,
+  });
 
   final Glyph glyph;
   final String label;
+  final PageLabel? pageLabel;
 }
 
 /// Where the sidebar cannot widen in place, [onToggle] is null and the toggle
@@ -210,9 +216,7 @@ class _SidebarOverlay extends StatelessWidget {
                 autofocus: true,
                 child: Material(
                   color: colorScheme.chromeSurface,
-                  shape: BorderDirectional(
-                    end: Divider.createBorderSide(context),
-                  ),
+                  // shape: BorderDirectional(end: Divider.createBorderSide(context)),
                   elevation: 8,
                   shadowColor: colorScheme.shadow,
                   child: AnimatedBuilder(
@@ -315,44 +319,75 @@ class _SidebarPane extends StatelessWidget {
           ),
           const SizedBox(height: _toggleGap),
           Expanded(
-            child: ScrollConfiguration(
-              behavior: const HiddenBarScrollBehavior(),
-              child: SingleChildScrollView(
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        for (final (index, destination) in destinations.indexed)
-                          _SidebarButton(
-                            key: ValueKey(destination.label),
-                            colors: colors,
-                            height: itemHeight,
-                            sideInset: sideInset,
-                            selected: index == selectedIndex,
-                            tooltip: rowTooltip(destination.label),
-                            onTap: () => onSelected(index),
-                            child: _DestinationRow(
-                              destination: destination,
-                              selected: index == selectedIndex,
-                              width: rowWidth,
-                              iconInset: iconInset,
-                              style: labelStyle,
-                              labelOpacity: labelOpacity,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final availableHeight = constraints.maxHeight;
+                final n = destinations.length;
+                final calculatedGap = n > 1
+                    ? (availableHeight - n * itemHeight) / (n + 1)
+                    : 4.0;
+                final dynamicGap = calculatedGap.clamp(6.0, 28.0);
+                final totalItemsHeight = n * itemHeight + (n - 1) * dynamicGap;
+                final topPadding = math.max(
+                  0.0,
+                  (availableHeight - totalItemsHeight) / 2,
+                );
+                final stride = itemHeight + dynamicGap;
+
+                return ScrollConfiguration(
+                  behavior: const HiddenBarScrollBehavior(),
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      height: math.max(
+                        availableHeight,
+                        totalItemsHeight + topPadding * 2,
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: topPadding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                for (final (index, destination)
+                                    in destinations.indexed) ...[
+                                  if (index > 0) SizedBox(height: dynamicGap),
+                                  _SidebarButton(
+                                    key: ValueKey(destination.label),
+                                    colors: colors,
+                                    height: itemHeight,
+                                    sideInset: sideInset,
+                                    selected: index == selectedIndex,
+                                    tooltip: rowTooltip(destination.label),
+                                    onTap: () => onSelected(index),
+                                    child: _DestinationRow(
+                                      destination: destination,
+                                      selected: index == selectedIndex,
+                                      width: rowWidth,
+                                      iconInset: iconInset,
+                                      style: labelStyle,
+                                      labelOpacity: labelOpacity,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
-                      ],
-                    ),
-                    if (selectedIndex < destinations.length)
-                      _SelectionIndicator(
-                        color: colors.indicator,
-                        index: selectedIndex,
-                        start: sideInset,
-                        stride: itemHeight + _itemGap,
+                          if (selectedIndex < destinations.length)
+                            _SelectionIndicator(
+                              color: colors.indicator,
+                              index: selectedIndex,
+                              start: sideInset,
+                              topOffset: topPadding,
+                              stride: stride,
+                              itemHeight: itemHeight,
+                            ),
+                        ],
                       ),
-                  ],
-                ),
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: _verticalInset),
@@ -389,7 +424,6 @@ class _SidebarButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: sideInset,
-        vertical: _itemGap / 2,
       ),
       child: Semantics(
         container: true,
@@ -469,7 +503,14 @@ class _DestinationRow extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(width: iconInset),
-            AnimatedGlyph(glyph: destination.glyph, filled: selected),
+            if (destination.pageLabel != null)
+              ModernSidebarIcon(
+                pageLabel: destination.pageLabel!,
+                selected: selected,
+                size: _iconSize,
+              )
+            else
+              AnimatedGlyph(glyph: destination.glyph, filled: selected),
             const SizedBox(width: _labelGap),
             Expanded(
               child: Opacity(
@@ -499,13 +540,17 @@ class _SelectionIndicator extends StatefulWidget {
     required this.color,
     required this.index,
     required this.start,
+    required this.topOffset,
     required this.stride,
+    required this.itemHeight,
   });
 
   final Color color;
   final int index;
   final double start;
+  final double topOffset;
   final double stride;
+  final double itemHeight;
 
   @override
   State<_SelectionIndicator> createState() => _SelectionIndicatorState();
@@ -536,7 +581,9 @@ class _SelectionIndicatorState extends State<_SelectionIndicator>
   }
 
   double _topOf(int index) =>
-      index * widget.stride + (widget.stride - _indicatorHeight) / 2;
+      widget.topOffset +
+      index * widget.stride +
+      (widget.itemHeight - _indicatorHeight) / 2;
 
   @override
   Widget build(BuildContext context) {

@@ -446,7 +446,7 @@ class WindowHeaderBar extends StatelessWidget {
     final backdropOpacity = this.backdropOpacity;
     return Material(
       color: backdropOpacity != null ? Colors.transparent : null,
-      shape: Border(bottom: Divider.createBorderSide(context)),
+      // shape: Border(bottom: Divider.createBorderSide(context)),
       child: SizedBox(
         height: height,
         child: Stack(

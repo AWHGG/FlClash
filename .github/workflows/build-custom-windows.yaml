@@ -1,0 +1,54 @@
+name: Build Custom Windows App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows Release
+    runs-on: windows-2022
+    steps:
+      - name: Enable git long paths
+        run: git config --global core.longpaths true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.1'
+          cache-dependency-path: core/go.sum
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.6'
+
+      - name: Get Dependencies
+        run: |
+          flutter --version
+          flutter pub get
+
+      - name: Fetch CA certificates
+        shell: bash
+        env:
+          CA_BUNDLE: cacert-2026-09-25.pem
+          CA_BUNDLE_SHA256: a41b5d356aea97a529fe27e0f7316d2f9d946d75927476cf9cf1b90637d00505
+        run: |
+          bundle=core/Clash.Meta/component/ca/ca-certificates.crt
+          curl -fsSL --retry 3 -o "$bundle" "https://curl.se/ca/$CA_BUNDLE"
+          echo "$CA_BUNDLE_SHA256  $bundle" | sha256sum -c -
+
+      - name: Build Windows App
+        run: dart setup.dart windows -v
+
+      - name: Upload Windows App Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FlClash-Custom-Windows-x64
+          path: ./dist
+          overwrite: true

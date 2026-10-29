@@ -161,7 +161,7 @@ class _Sidebar extends ConsumerWidget {
     return NavigationSidebar(
       destinations: [
         for (final item in items)
-          SidebarDestination(glyph: item.glyph, label: item.label.label),
+          SidebarDestination(glyph: item.glyph, label: item.label.label, pageLabel: item.label),
       ],
       selectedIndex: currentIndex,
       expanded: canExpand && sidebarExpanded,
@@ -239,7 +239,7 @@ class AppSidebarContainer extends ConsumerWidget {
               color: backdropOpacity != null
                   ? chrome.withValues(alpha: backdropOpacity)
                   : chrome,
-              shape: BorderDirectional(end: Divider.createBorderSide(context)),
+              // shape: BorderDirectional(end: Divider.createBorderSide(context)),
               child: MediaQuery.removePadding(
                 context: context,
                 removeLeft: !isLtr,
