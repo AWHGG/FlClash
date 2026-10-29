@@ -147,14 +147,9 @@ void main() {
             )
             .first,
       );
-      expect(sidebarSurface.color, colorScheme.chromeSurface);
-      expect(sidebarSurface.color, isNot(sidebarContainer.color));
-      expect(
-        (sidebarSurface.shape! as BorderDirectional).end,
-        Divider.createBorderSide(
-          tester.element(find.byType(NavigationSidebar)),
-        ),
-      );
+      expect(sidebarSurface.color, SurfaceLevel.page.colorOf(colorScheme));
+      expect(sidebarSurface.color, sidebarContainer.color);
+      expect(sidebarSurface.shape, isNull);
 
       await tester.tap(find.text('count: 0'));
       await tester.pump();
@@ -249,7 +244,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     expect(container.read(appSettingProvider).sidebarExpanded, isFalse);
-    expect(tester.getSize(sidebar).width, 48);
+    expect(tester.getSize(sidebar).width, 68);
 
     await tester.tap(find.byTooltip('Expand'));
     await tester.pump();
@@ -260,12 +255,12 @@ void main() {
     container.read(viewSizeProvider.notifier).value = const Size(800, 800);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    expect(tester.getSize(sidebar).width, 48);
+    expect(tester.getSize(sidebar).width, 68);
 
     await tester.tap(find.byTooltip('Expand'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    expect(tester.getSize(sidebar).width, 48);
+    expect(tester.getSize(sidebar).width, 68);
     expect(find.text('Tools'), findsNWidgets(2));
     expect(container.read(appSettingProvider).sidebarExpanded, isTrue);
     expect(tester.takeException(), isNull);

@@ -4,4 +4,3 @@ export 'caption_icon.dart';
 export 'glyph.dart';
 export 'glyph_icon.dart';
 export 'glyph_painter.dart';
-export 'modern_sidebar_icon.dart';

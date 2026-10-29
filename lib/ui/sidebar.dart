@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
-import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/ui/context.dart';
 import 'package:fl_clash/ui/icons/icons.dart';
 import 'package:fl_clash/ui/l10n.dart';
@@ -32,15 +31,10 @@ const _indicatorDuration = Duration(milliseconds: 320);
 final _itemShape = AppShape.all(11);
 
 class SidebarDestination {
-  const SidebarDestination({
-    required this.glyph,
-    required this.label,
-    this.pageLabel,
-  });
+  const SidebarDestination({required this.glyph, required this.label});
 
   final Glyph glyph;
   final String label;
-  final PageLabel? pageLabel;
 }
 
 /// Where the sidebar cannot widen in place, [onToggle] is null and the toggle
