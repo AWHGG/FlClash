@@ -16,8 +16,12 @@ const _compactWidth = 68.0;
 const _expandedWidth = 220.0;
 const _itemSize = 44.0;
 const _itemGap = 8.0;
-const _toggleGap = 10.0;
-const _verticalInset = 22.0;
+// The toggle sits inside the 72dp page header band, so its top inset is
+// (72 - 44) / 2 and its center lands on the title/trailing action center.
+const _verticalInset = 14.0;
+// 14 + 44 (toggle) + 18 + 8 (list top padding) = 84: the first destination
+// still lands exactly on the page content top.
+const _toggleGap = 18.0;
 const _maxSideInset = 12.0;
 const _iconSize = 26.0;
 const _labelGap = 12.0;
